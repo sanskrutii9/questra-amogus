@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>QUESTRA · My Tasks</title>
+  <link rel="preload" href="/fonts/russo-one.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="offline" class="offline" hidden>Reconnecting…</div>
+
+  <!-- LOGIN -->
+  <main id="view-login" class="view center" hidden>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><span></span></div>
+      <h1>QUESTRA</h1>
+      <p class="muted">Live Task Game</p>
+    </div>
+    <form id="login-form" class="card login-card" autocomplete="off">
+      <label for="login-name">Enter your name</label>
+      <input id="login-name" name="name" type="text" inputmode="text" autocapitalize="words"
+             spellcheck="false" placeholder="e.g. 415" maxlength="40" required />
+      <p id="login-error" class="error" role="alert"></p>
+      <button type="submit" class="btn primary" id="login-btn">Enter</button>
+    </form>
+  </main>
+
+  <!-- WAITING -->
+  <main id="view-wait" class="view center" hidden>
+    <div class="pulse" aria-hidden="true"></div>
+    <h2 id="wait-title">Waiting for the host…</h2>
+    <p id="wait-text" class="muted"></p>
+    <button class="link" data-action="logout">Not you? Log out</button>
+  </main>
+
+  <!-- TASKS -->
+  <main id="view-tasks" class="view" hidden>
+    <header class="top">
+      <div>
+        <p class="muted small" id="round-label">Round 1 / 10</p>
+        <h2 id="hello">Hi</h2>
+      </div>
+      <!-- Emergency meeting button (doc Section 26) -->
+      <button id="meeting-btn" class="meeting-btn" type="button" aria-label="Call an emergency meeting" title="Call an emergency meeting">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 18h14v3H5z"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4M2 12h2M20 12h2"/>
+        </svg>
+      </button>
+    </header>
+
+    <section class="progress card">
+      <div class="progress-row">
+        <span id="progress-text">0 of 5 done</span>
+        <span id="progress-pct" class="muted">0%</span>
+      </div>
+      <div class="bar"><div id="bar-fill"></div></div>
+    </section>
+
+    <div id="locked" class="banner" hidden>Voting in progress. Tasks are locked.</div>
+
+    <h3 class="section-title">My tasks</h3>
+    <ul id="task-list" class="tasks"></ul>
+
+    <p id="all-done" class="all-done" hidden>All your tasks are done. Nice work!</p>
+
+    <button class="link" data-action="logout">Not you? Log out</button>
+  </main>
+
+  <!-- CONFIRM SHEET -->
+  <div id="sheet" class="sheet-backdrop" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <p class="muted small">Mark this task as done?</p>
+      <h3 id="sheet-title"></h3>
+      <p class="muted small">This can't be undone.</p>
+      <div class="sheet-actions">
+        <button class="btn ghost" id="sheet-cancel">Not yet</button>
+        <button class="btn primary" id="sheet-confirm">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALL MEETING CONFIRM -->
+  <div id="msheet" class="sheet-backdrop" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="msheet-title">
+      <h3 id="msheet-title">Call an emergency meeting?</h3>
+      <p class="muted small">Every player and the host get an alert on their screen right away.</p>
+      <div class="sheet-actions">
+        <button class="btn ghost" id="msheet-no">No</button>
+        <button class="btn danger" id="msheet-yes">Yes, call it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEETING ALERT -->
+  <div id="alert" class="alert" role="alertdialog" aria-modal="true" aria-labelledby="alert-title" hidden>
+    <div class="alert-box">
+      <p class="alert-icon" aria-hidden="true">!</p>
+      <h2 id="alert-title">Emergency meeting</h2>
+      <p class="alert-by">Called by <b id="alert-by">—</b></p>
+      <button class="btn big-ok" id="alert-ok">OK</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/alarm.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

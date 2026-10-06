@@ -1,0 +1,3 @@
+node_modules/
+data/game.db*
+.DS_Store

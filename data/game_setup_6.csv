@@ -1,0 +1,31 @@
+login_id,login_name,task_id,task_name,player_id
+L1,415,T01,Find the hidden clue,P2
+L1,415,T02,Fix the wiring panel,P3
+L1,415,T03,Scan your ID card,P4
+L1,415,T04,Empty the trash bin,P5
+L1,415,T05,Align the engine output,P6
+L2,416,T06,Download the data file,P3
+L2,416,T07,Upload the data file,P4
+L2,416,T08,Solve the notice-board riddle,P5
+L2,416,T09,Fuel the generator,P6
+L2,416,T10,Calibrate the distributor,P1
+L3,417,T11,Clear the asteroid sketch,P4
+L3,417,T12,Inspect the sample,P5
+L3,417,T13,Swipe the access card,P6
+L3,417,T14,Divert the power,P1
+L3,417,T15,Stabilise the steering,P2
+L4,418,T16,Reboot the Wi-Fi,P5
+L4,418,T17,Unlock the manifold,P6
+L4,418,T18,Prime the shields,P1
+L4,418,T19,Chart the course,P2
+L4,418,T20,Clean the O2 filter,P3
+L5,419,T21,Start the reactor,P6
+L5,419,T22,Record the temperature,P1
+L5,419,T23,Sort the samples,P2
+L5,419,T24,Restore the lights,P3
+L5,419,T25,Fix the comms,P4
+L6,402,T26,Match the colour cards,P1
+L6,402,T27,Count the chairs in Room B,P2
+L6,402,T28,Collect a blue sticker,P3
+L6,402,T29,Get a signature from the host,P4
+L6,402,T30,Stack the cups,P5

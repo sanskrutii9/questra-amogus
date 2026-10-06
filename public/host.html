@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>QUESTRA · Host</title>
+  <link rel="preload" href="/fonts/russo-one.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/host.css" />
+</head>
+<body class="host">
+  <div id="offline" class="offline" hidden>Reconnecting…</div>
+
+  <!-- HOST LOGIN -->
+  <main id="view-login" class="view center" hidden>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><span></span></div>
+      <h1>QUESTRA</h1>
+      <p class="muted">Host control panel</p>
+    </div>
+    <form id="login-form" class="card login-card" autocomplete="off">
+      <label for="password">Host password</label>
+      <input id="password" type="password" required placeholder="host-xxxxxx" />
+      <p id="login-error" class="error" role="alert"></p>
+      <button type="submit" class="btn primary" id="login-btn">Log in</button>
+      <p class="muted small">The password is printed in the Terminal where the server is running.</p>
+    </form>
+  </main>
+
+  <!-- HOST DASHBOARD -->
+  <div id="view-dash" hidden>
+    <header class="hbar">
+      <div class="hbar-left">
+        <strong class="wordmark">QUESTRA</strong><span class="muted">Host</span>
+      </div>
+      <div class="hbar-right">
+        <span id="round-pill" class="pill">No round yet</span>
+        <span id="online-pill" class="pill"><i class="dot"></i><span id="online-text">0 online</span></span>
+        <button class="btn ghost sm" id="logout-btn">Log out</button>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="setup">Setup</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="scoring">Scoring</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="voting">Voting</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="scorecards">Scorecards</button>
+    </nav>
+
+    <!-- SCORING TAB (doc Section 10). No roles here. -->
+    <main id="tab-scoring" class="scoring" hidden>
+      <div id="score-empty" class="empty big" hidden></div>
+
+      <div id="score-body">
+        <div class="stats">
+          <div class="stat card">
+            <p class="stat-label">Round</p>
+            <p class="stat-value" id="st-round">—</p>
+            <p class="stat-sub" id="st-timer">—</p>
+          </div>
+          <div class="stat card">
+            <p class="stat-label">Tasks completed</p>
+            <p class="stat-value"><span id="st-done">0</span><span class="of"> / <span id="st-total">60</span></span></p>
+            <div class="meter" aria-hidden="true"><div id="st-meter"></div></div>
+          </div>
+          <div class="stat card">
+            <p class="stat-label">Participants online</p>
+            <p class="stat-value"><span id="st-online">0</span><span class="of" id="st-online-total"></span></p>
+            <p class="stat-sub" id="st-offline">—</p>
+          </div>
+          <div class="stat card">
+            <p class="stat-label">Leading player</p>
+            <p class="stat-value" id="st-lead">—</p>
+            <p class="stat-sub" id="st-lead-sub">—</p>
+          </div>
+        </div>
+
+        <div class="score-grid">
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Players</h2>
+                <p class="muted small">Score = completed tasks linked to the player (max 5). Click a player to see where each point came from.</p>
+              </div>
+              <div class="seg" role="group" aria-label="Sort players">
+                <button type="button" class="on innocent" data-sort="id">By ID</button>
+                <button type="button" class="innocent" data-sort="score">By score</button>
+              </div>
+            </div>
+            <div class="thead" aria-hidden="true">
+              <span>Player</span><span>Progress</span><span class="num">Score</span><span class="num">Last point</span>
+            </div>
+            <div id="players" class="rows"></div>
+          </section>
+
+          <div class="side">
+            <section class="card panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Participant logins</h2>
+                  <p class="muted small">Who is doing the tasks. Click a login to see its 5 tasks.</p>
+                </div>
+              </div>
+              <div id="score-logins" class="rows"></div>
+            </section>
+
+            <section class="card panel">
+              <div class="panel-head"><h2>Emergency meetings</h2></div>
+              <ol id="meeting-log" class="feed"></ol>
+            </section>
+
+            <section class="card panel">
+              <div class="panel-head"><h2>Live activity</h2></div>
+              <ol id="feed" class="feed"></ol>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- VOTING TAB (doc Sections 12–16) -->
+    <main id="tab-voting" class="voting" hidden>
+      <section class="card panel vote-top">
+        <div>
+          <h2>Voting</h2>
+          <p class="muted small" id="vote-status">—</p>
+        </div>
+        <div class="toolbar">
+          <label class="switch small"><input type="checkbox" id="show-counts" /> Show live counts on display</label>
+          <button class="btn ghost sm" id="open-display">Open voting display ↗</button>
+        </div>
+      </section>
+
+      <div id="vote-empty" class="empty big" hidden></div>
+
+      <!-- tasks still running -->
+      <section id="vote-start" class="card panel center-panel" hidden>
+        <h3>Tasks are still running</h3>
+        <p class="muted">Starting the vote locks every participant's task list. The public display switches to the voting screen.</p>
+        <div><button class="btn primary big" id="start-voting">Start voting</button></div>
+      </section>
+
+      <!-- voting open -->
+      <section id="vote-live" class="card panel" hidden>
+        <div class="vote-summary">
+          <p><span class="muted">Total votes</span> <b id="vote-total">0</b></p>
+          <p><span class="muted">Leading</span> <b id="vote-lead">—</b></p>
+          <div class="toolbar">
+            <button class="btn ghost sm" id="resume-tasks">Resume tasks</button>
+            <button class="btn ghost sm" id="reset-votes">Reset votes</button>
+          </div>
+        </div>
+        <div id="vote-grid" class="vote-grid"></div>
+        <div class="actions">
+          <button class="btn primary big" id="submit-votes">Submit votes &amp; reveal</button>
+        </div>
+      </section>
+
+      <!-- revealed -->
+      <section id="vote-result" class="card panel" hidden>
+        <p class="stat-label">Result shown on the public display</p>
+        <div id="result-main" class="result-main"></div>
+        <h3 class="section-title">Final vote count</h3>
+        <div id="result-table" class="result-table"></div>
+        <div class="actions">
+          <button class="btn danger" data-action="end-round">End Round 1 &amp; save scorecard</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- SCORECARDS TAB (doc Section 25.5) -->
+    <main id="tab-scorecards" class="voting" hidden>
+      <section class="card panel vote-top">
+        <div>
+          <h2>Scorecards</h2>
+          <p class="muted small">Saved when a round ends. Read-only.</p>
+        </div>
+        <button class="btn ghost sm" id="download-csv">Download all as CSV</button>
+      </section>
+      <div id="sc-empty" class="empty big" hidden>No scorecards yet. End a round to save its scorecard.</div>
+      <div id="sc-body" hidden>
+        <div id="sc-rounds" class="chips" role="tablist" aria-label="Rounds"></div>
+        <section class="card panel" id="sc-card">
+          <div class="panel-head">
+            <div>
+              <h2 id="sc-title">Round 1 Scorecard</h2>
+              <p class="muted small" id="sc-times"></p>
+            </div>
+          </div>
+          <div id="sc-result" class="result-main"></div>
+          <div class="table-wrap">
+            <table class="sc-table">
+              <thead><tr><th>Player</th><th>Name</th><th>Role</th><th class="num">Tasks</th><th class="num">Score</th><th class="num">Votes</th><th></th></tr></thead>
+              <tbody id="sc-rows"></tbody>
+            </table>
+          </div>
+          <p class="small muted" id="sc-meetings"></p>
+        </section>
+      </div>
+    </main>
+
+    <main class="grid" id="tab-setup">
+      <!-- ROUND SETUP -->
+      <section class="card panel" id="round-panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="form-title">Round 1 setup</h2>
+            <p class="muted small" id="form-sub"></p>
+          </div>
+          <label class="switch small">
+            <input type="checkbox" id="hide-roles" /> Hide roles
+          </label>
+        </div>
+
+        <div id="form-banner" class="banner" hidden></div>
+        <div id="end-box" class="end-box" hidden>
+          <p class="small muted">When this round is over, end it to save its scorecard. Then you can set up the next round here.</p>
+          <button class="btn danger" data-action="end-round">End Round 1 &amp; save scorecard</button>
+        </div>
+
+        <div class="toolbar" id="form-tools">
+          <button class="btn ghost sm" id="copy-prev" hidden>Copy Round 0 names</button>
+          <label class="btn ghost sm file-btn">Import names CSV
+            <input type="file" id="import-players" accept=".csv,text/csv" hidden />
+          </label>
+        </div>
+
+        <div class="ptable" id="ptable"></div>
+
+        <div class="form-foot">
+          <p id="role-count" class="small muted"></p>
+          <ul id="form-errors" class="errors" hidden></ul>
+          <div class="actions">
+            <button class="btn ghost" id="save-btn">Save names</button>
+            <button class="btn primary" id="start-btn">Start round</button>
+          </div>
+          <p id="start-hint" class="small muted"></p>
+        </div>
+      </section>
+
+      <!-- TASK FILE + LOGINS -->
+      <section class="card panel" id="file-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Task file</h2>
+            <p class="muted small" id="file-status">No task file yet</p>
+          </div>
+        </div>
+        <div class="count-row">
+          <label for="pcount" class="small"><b>Number of participants</b></label>
+          <select id="pcount" class="select"></select>
+        </div>
+        <p class="small muted" id="pcount-hint"></p>
+        <div class="toolbar">
+          <label class="btn primary sm file-btn">Upload task file (.csv)
+            <input type="file" id="upload-file" accept=".csv,text/csv" hidden />
+          </label>
+          <a class="btn ghost sm" id="sample-link" href="/host/sample.csv?n=12">Download sample</a>
+        </div>
+        <ul id="file-errors" class="errors" hidden></ul>
+
+        <h3 class="section-title">Participant logins</h3>
+        <p class="muted small">Fixed for every round. Click a login to see its 5 tasks.</p>
+        <div id="logins" class="logins"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- CONFIRM MODAL -->
+  <div id="modal" class="modal-backdrop" hidden>
+    <div class="modal card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title">Are you sure?</h3>
+      <p id="modal-text" class="muted"></p>
+      <div class="actions">
+        <button class="btn ghost" id="modal-cancel">Cancel</button>
+        <button class="btn danger" id="modal-ok">Yes, continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMERGENCY MEETING (host) -->
+  <div id="meeting" class="meeting-backdrop" hidden>
+    <div class="meeting-box" role="alertdialog" aria-modal="true" aria-labelledby="mt-title">
+      <p class="mt-icon" aria-hidden="true">!</p>
+      <h2 id="mt-title">Emergency meeting</h2>
+      <p class="mt-by">Called by <b id="mt-by">—</b></p>
+      <p class="muted small" id="mt-time"></p>
+      <div class="mt-acks">
+        <p><b id="mt-ack">0 / 11</b> acknowledged</p>
+        <div class="meter"><div id="mt-meter"></div></div>
+        <p class="small muted" id="mt-waiting"></p>
+      </div>
+      <button class="btn primary big" id="mt-ok">OK · close meeting</button>
+      <p class="small muted">Closing re-enables everyone's meeting button.</p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/alarm.js"></script>
+  <script src="/host.js"></script>
+</body>
+</html>

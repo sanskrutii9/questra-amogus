@@ -1,0 +1,24 @@
+{
+  "name": "among-us-irl",
+  "version": "0.1.0",
+  "private": true,
+  "description": "QUESTRA live task, scoring and voting game (3–20 participants)",
+  "main": "server/index.js",
+  "scripts": {
+    "seed": "node server/seed.js",
+    "seed:6": "node server/seed.js --n=6",
+    "seed:8": "node server/seed.js --n=8",
+    "seed:demo": "node server/seed.js --demo",
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "express": "^5.2.1",
+    "socket.io": "^4.8.1"
+  }
+}

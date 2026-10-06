@@ -1,0 +1,87 @@
+/* Public voting display (projector / second screen). Big, high-contrast, nothing interactive except fullscreen. */
+
+body.display {
+  min-height: 100vh; min-height: 100dvh; overflow: hidden; margin: 0;
+  background: #000;
+}
+body.display.hide-cursor { cursor: none; }
+
+.stage {
+  position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 4vh 5vw; gap: 2.4vh; animation: fade 0.5s ease-out;
+}
+@keyframes fade { from { opacity: 0; } }
+
+.logo.huge { transform: scale(2.2); margin-bottom: 4vh; }
+.mega { font-size: clamp(48px, 10vw, 180px); letter-spacing: 0.14em; line-height: 1; }
+.lead-line { font-size: clamp(18px, 2.6vw, 44px); color: var(--muted); font-weight: 600; }
+
+.kicker { font-size: clamp(16px, 2vw, 34px); letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue); }
+.title { font-size: clamp(28px, 4.6vw, 84px); line-height: 1.1; max-width: 18ch; }
+
+.names {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.6vh 1.4vw; width: min(100%, 1500px); margin-top: 2vh;
+}
+.names > * { --c: var(--white); }
+.names > :nth-child(5n+1) { --c: var(--red); }
+.names > :nth-child(5n+2) { --c: var(--blue); }
+.names > :nth-child(5n+3) { --c: var(--green); }
+.names > :nth-child(5n+4) { --c: var(--orange); }
+.nm-card {
+  background: rgb(0 0 0 / 0.6); border: 2px solid var(--line); border-left: 10px solid var(--c); border-radius: 18px; padding: 2.2vh 1.4vw;
+  font-size: clamp(16px, 2.2vw, 40px); font-weight: 800; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  min-width: 0;
+}
+.nm-card span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nm-card b { color: var(--accent); font-variant-numeric: tabular-nums; }
+.nm-card.only { justify-content: center; }
+.pulse-line { font-size: clamp(16px, 1.8vw, 30px); color: var(--muted); animation: breathe 2s ease-in-out infinite; }
+@keyframes breathe { 50% { opacity: 0.35; } }
+
+.dots { display: flex; gap: 2vw; margin-top: 3vh; }
+.dots i { width: clamp(16px, 2vw, 36px); height: clamp(16px, 2vw, 36px); border-radius: 50%; background: var(--text); animation: bounce 1s ease-in-out infinite; }
+.dots i:nth-child(2) { animation-delay: 0.15s; }
+.dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bounce { 50% { transform: translateY(-2.4vh); opacity: 0.4; } }
+
+/* result: only the most-voted name + identity. Whole screen floods red (impostor) or green (innocent). */
+.result-stage { isolation: isolate; gap: 4vh; }
+.result-stage::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  clip-path: circle(150% at 50% 50%);
+}
+.result-stage.impostor::before { background: radial-gradient(circle at 50% 45%, #ff3346 0%, #c4001b 55%, #5e000d 100%); }
+.result-stage.innocent::before { background: radial-gradient(circle at 50% 45%, #3cf07c 0%, #0f9e43 55%, #03401a 100%); }
+.result-stage.tie::before      { background: radial-gradient(circle at 50% 45%, #ffb347 0%, #e07800 55%, #5a2c00 100%); }
+.reveal-name {
+  font-size: clamp(64px, 14vw, 260px); line-height: 0.95; letter-spacing: 0.04em; text-transform: uppercase;
+  color: #fff; text-shadow: 0 6px 0 rgb(0 0 0 / 0.35), 0 0 60px rgb(0 0 0 / 0.35); overflow-wrap: anywhere;
+}
+.reveal-role {
+  font-family: var(--head); font-size: clamp(40px, 8vw, 150px); letter-spacing: 0.16em; color: #fff;
+  padding: 0.12em 0.6em; border: 0.06em solid #fff; border-radius: 0.3em;
+  text-shadow: 0 5px 0 rgb(0 0 0 / 0.3);
+}
+
+/* staged reveal: name on the black sky, then the colour floods the screen, then the identity */
+.result-stage.animate .reveal-name { animation: zoom 0.9s cubic-bezier(.2,.9,.2,1.2) both; }
+.result-stage.animate::before { animation: flood 0.9s cubic-bezier(.6,0,.3,1) 1.6s both; }
+.result-stage.animate .reveal-role { animation: pop 0.7s cubic-bezier(.2,.9,.3,1.4) 2.3s both; }
+.result-stage.animate { animation: none; }
+@keyframes zoom { from { transform: scale(0.4); opacity: 0; filter: blur(12px); } }
+@keyframes flood { from { clip-path: circle(0% at 50% 50%); } }
+@keyframes pop { from { transform: scale(0.2); opacity: 0; } }
+
+.fs-btn {
+  position: fixed; right: 16px; bottom: 16px; z-index: 5; appearance: none; border: 1px solid var(--line);
+  background: rgb(0 0 0 / 0.6); color: var(--muted); padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.4s;
+}
+.hide-cursor .fs-btn { opacity: 0; pointer-events: none; }
+
+@media (max-width: 800px) { .names { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .stage, .result-stage.animate *, .result-stage.animate::before, .dots i, .pulse-line { animation: none !important; }
+}
+.reveal-role { text-transform: uppercase; }

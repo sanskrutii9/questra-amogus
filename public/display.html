@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QUESTRA · Voting Display</title>
+  <link rel="preload" href="/fonts/russo-one.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/display.css" />
+</head>
+<body class="display">
+  <!-- IDLE -->
+  <section id="s-idle" class="stage" hidden>
+    <div class="logo huge" aria-hidden="true"><span></span></div>
+    <h1 class="mega">QUESTRA</h1>
+    <p class="lead-line" id="idle-text">Waiting for the game to start</p>
+  </section>
+
+  <!-- VOTING -->
+  <section id="s-voting" class="stage voting-stage" hidden>
+    <p class="kicker" id="voting-kicker">Round 1 · Voting</p>
+    <h1 class="title">Who will receive the most votes?</h1>
+    <div id="names" class="names"></div>
+    <p class="pulse-line" id="voting-foot">Votes are being counted…</p>
+  </section>
+
+  <!-- SUSPENSE -->
+  <section id="s-suspense" class="stage" hidden>
+    <p class="kicker">The votes are in</p>
+    <div class="dots"><i></i><i></i><i></i></div>
+  </section>
+
+  <!-- RESULT: only the most-voted name + identity -->
+  <section id="s-result" class="stage result-stage" hidden>
+    <h1 class="reveal-name" id="result-name">—</h1>
+    <div class="reveal-role" id="result-role">—</div>
+  </section>
+
+  <button id="fs" class="fs-btn" type="button">Fullscreen (F)</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/display.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+login_id,login_name,task_id,task_name,player_id
+L1,415,T01,Find the hidden clue,P2
+L1,415,T02,Fix the wiring panel,P4
+L1,415,T03,Scan your ID card,P6
+L1,415,T04,Empty the trash bin,P8
+L1,415,T05,Align the engine output,P10
+L2,416,T06,Download the data file,P3
+L2,416,T07,Upload the data file,P5
+L2,416,T08,Solve the notice-board riddle,P7
+L2,416,T09,Fuel the generator,P9
+L2,416,T10,Calibrate the distributor,P11
+L3,417,T11,Clear the asteroid sketch,P4
+L3,417,T12,Inspect the sample,P6
+L3,417,T13,Swipe the access card,P8
+L3,417,T14,Divert the power,P10
+L3,417,T15,Stabilise the steering,P12
+L4,418,T16,Reboot the Wi-Fi,P5
+L4,418,T17,Unlock the manifold,P7
+L4,418,T18,Prime the shields,P9
+L4,418,T19,Chart the course,P11
+L4,418,T20,Clean the O2 filter,P1
+L5,419,T21,Start the reactor,P6
+L5,419,T22,Record the temperature,P8
+L5,419,T23,Sort the samples,P10
+L5,419,T24,Restore the lights,P12
+L5,419,T25,Fix the comms,P2
+L6,402,T26,Match the colour cards,P7
+L6,402,T27,Count the chairs in Room B,P9
+L6,402,T28,Collect a blue sticker,P11
+L6,402,T29,Get a signature from the host,P1
+L6,402,T30,Stack the cups,P3
+L7,loby,T31,Find the QR code,P8
+L7,loby,T32,Solve the number lock,P10
+L7,loby,T33,Deliver the envelope,P12
+L7,loby,T34,Water the plant,P2
+L7,loby,T35,Sort the coloured pens,P4
+L8,square,T36,Copy the secret code,P9
+L8,square,T37,Find the red marker,P11
+L8,square,T38,Arrange the books,P1
+L8,square,T39,Decode the cipher,P3
+L8,square,T40,Fold a paper plane,P5
+L9,stairs,T41,Spot the odd photo,P10
+L9,stairs,T42,Tie the knot,P12
+L9,stairs,T43,Ring the bell twice,P2
+L9,stairs,T44,Find the lost key,P4
+L9,stairs,T45,Match the socks,P6
+L10,407,T46,Solve the jigsaw,P11
+L10,407,T47,Write a password backwards,P1
+L10,407,T48,Find the hidden emoji,P3
+L10,407,T49,Balance the scale,P5
+L10,407,T50,Light the lamp,P7
+L11,414,T51,Read the wall clock,P12
+L11,414,T52,Count the posters,P2
+L11,414,T53,Trace the maze,P4
+L11,414,T54,Press the hidden switch,P6
+L11,414,T55,Pin the map marker,P8
+L12,loby2,T56,Find the green card,P1
+L12,loby2,T57,Repair the chain,P3
+L12,loby2,T58,Fill the water bottle,P5
+L12,loby2,T59,Match the logos,P7
+L12,loby2,T60,Close the vent,P9
